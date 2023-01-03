@@ -1,0 +1,9 @@
+import express from "express"
+import { postNew } from "../controllers/post.controllers.js"
+import { validatePost } from "../middlewares/posts.middlewares.js"
+
+const router = express.Router()
+
+router.post("/post", validatePost, postNew)
+
+export default router
