@@ -2,6 +2,7 @@ import express from "express";
 import cors from  "cors";
 import dotenv from "dotenv";
 import authRoutes from "./routes/auth.routes.js";
+import usersRoutes from "./routes/users.routes.js";
 import likes from "./routes/likes.routes.js";
 
 dotenv.config();
@@ -10,6 +11,7 @@ app.use(express.json())
 app.use(cors())
 
 app.use(authRoutes)
+app.use(usersRoutes)
 app.use(likes)
 
 const PORT = process.env.PORT || 5000

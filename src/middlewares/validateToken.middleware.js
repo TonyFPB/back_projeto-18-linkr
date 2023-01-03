@@ -22,7 +22,7 @@ export function authTokenValidate(req, res, next) {
     if (errorJWT) {
         return res.sendStatus(401)
     }
-
+   
     res.locals = decodedJWT.id
 
     next()
