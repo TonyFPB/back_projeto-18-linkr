@@ -1,11 +1,12 @@
 import connection from "../db/db.js"
 import bcrypt from 'bcrypt'
+import { findUser } from "../repositories/auth.repositories.js"
 
 
 export async function conflictUserEmail(req, res, next) {
     const { email } = req.body
     try {
-        const userExists = await connection.query(`SELECT * FROM users WHERE email=$1`, [email])
+        const userExists = await findUser(email)
         if (userExists.rowCount > 0) {
             return res.sendStatus(409)
         }
@@ -19,7 +20,7 @@ export async function conflictUserEmail(req, res, next) {
 export async function authenticationSignIn(req, res, next) {
     const { email, password } = req.body
     try {
-        const userExists = await connection.query(`SELECT id, password FROM users WHERE email=$1`, [email])
+        const userExists = await findUser(email)
         if (userExists.rowCount === 0 || !bcrypt.compareSync(password, userExists.rows[0].password)) {
             return res.status(401).send({ message: "Email e/ou password incorretos." })
         }

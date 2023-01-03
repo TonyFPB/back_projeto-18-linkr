@@ -18,7 +18,7 @@ export function authTokenValidate(req, res, next) {
         errorJWT = error
         decodedJWT = decoded
     })
-
+    
     if (errorJWT) {
         return res.sendStatus(401)
     }
