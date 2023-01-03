@@ -1,4 +1,4 @@
-import { insertLikes } from "../repositories/likes.repositories.js";
+import { getLikes, insertLikes } from "../repositories/likes.repositories.js";
 
 export async function postLikes(req, res) {
     const user_id = res.locals.user_id;
@@ -15,6 +15,17 @@ export async function postLikes(req, res) {
     }
 }
 
-export async function getLikes(req, res){
+export async function getAllLikes(req, res) {
+    const post_id = res.locals.post_id;
+    try {
+        const likes = await getLikes(post_id);
 
+        res.send(
+            { likes: likes.rows[0].count }
+        );
+
+    } catch (error) {
+        console.error(error);
+        res.sendStatus(500);
+    }
 }
