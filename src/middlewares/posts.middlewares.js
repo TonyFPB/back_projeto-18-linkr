@@ -1,33 +1,15 @@
 import { insertHashtag, selectHashtag, selectPostById } from "../repositories/posts.repositories.js";
 import { postSchema } from "../schemas/posts.schemas.js";
 
-export async function validatePost (req, res, next) {
-    const body = req.body
-    const user_id = res.locals
+async function arrayHashtags (message) {
+  const msg = message.split(" ")
 
-    const validation = postSchema.validate(body, { abortEarly: false });
-    if (validation.error) {
-        const erros = validation.error.details.map((detail) => detail.message);
-        return res.status(422).send(erros);
-      }
+  const hashtags = []
+  for (let word of msg) {
+    if (word[0] === "#") hashtags.push(word.replace("#",""))
+  }
 
-    // req.post = {...body, user_id}
-    const {message, url} = req.body
-    const msg = message.split(" ")
-    
-    const hashtags = []
-    for (let word of msg) {
-      if (word[0] === "#") hashtags.push(word.replace("#",""))
-    }
-    
-    if (hashtags.length === 0) {
-      req.post = {
-        user_id,
-        url,
-        message
-      }
-      return next()
-    }
+  if (hashtags.length === 0) return []
     
   try {
     const hashtags_id = []
@@ -42,25 +24,38 @@ export async function validatePost (req, res, next) {
       }
 
       hashtags_id.push(find.rows[0].id)
-      
     }
-   
-    req.post = {
-      user_id,
-      url,
-      message,
-      hashtags_id
-    }
-    return next()
 
+    return hashtags_id
   } catch (error) {
     console.log(error)
     res.sendStatus(500)
   }
 }
 
+export async function validatePost (req, res, next) {
+    const body = req.body
+    const user_id = res.locals
+
+    const validation = postSchema.validate(body, { abortEarly: false });
+    if (validation.error) {
+        const erros = validation.error.details.map((detail) => detail.message);
+        return res.status(422).send(erros);
+      }
+
+    const {message} = req.body
+    const hashtags = await arrayHashtags(message)
+
+    req.post = {
+      ...body,
+      user_id,
+      hashtags
+    }
+    next()
+}
+
 export async function validatePutPost (req, res, next) {
-  const body = req.body
+  const body = req.body //message e url
   const {id} = req.params
   const user_id = res.locals
 
@@ -76,10 +71,21 @@ export async function validatePutPost (req, res, next) {
     if (rows.length === 0) return res.sendStatus(404)
     if (user_id !== rows[0].user_id) return res.sendStatus(401)
 
-    if (rows[0].message !== body.message) req.post = {...body, changed: true, old: rows[0].message, message_id:rows[0].id}
-    else req.post = {...body, changed: false}
-    
-    next()
+    if (rows[0].message === body.message) req.post = {...body, changed: false}
+    else {
+     
+      const newHashtags = await arrayHashtags(body.message)
+      const oldHashtags = await arrayHashtags(rows[0].message)
+
+      const toDelete = []
+      const toUpdate = []
+
+      for (let i of oldHashtags) if (!newHashtags.includes(i)) toDelete.push(i)
+      for (let i of newHashtags) if (!oldHashtags.includes(i)) toUpdate.push(i)
+
+      res.send(toDelete + "la" + toUpdate)
+    }
+
   } catch (error) {
     console.log(error)
     res.sendStatus(500)

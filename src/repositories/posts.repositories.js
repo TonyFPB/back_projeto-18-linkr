@@ -21,7 +21,7 @@ export function selectPostByMessage (message) {
 }
 
 export function insertPostHashtag (post_id, hashtag_id) {
-    return connection.query('INSERT INTO posts_hashtags (post_id, hashtag_id) VALUES ($1,$2)', [post_id, hashtag_id])
+    return connection.query('INSERT INTO posts_hashtags (post_id, hashtag_id) VALUES ($1,$2)',[post_id, hashtag_id])
 }
 
 export function selectPosts () {
