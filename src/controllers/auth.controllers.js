@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt'
 import connection from '../db/db.js'
+import jwt from 'jsonwebtoken'
 
 export async function postSignUp(req, res) {
     const { name, email, password, image } = req.body
@@ -11,4 +12,12 @@ export async function postSignUp(req, res) {
         console.log(err)
         res.sendStatus(500)
     }
+}
+
+export function sendToken(req, res) {
+    const id = res.locals
+    
+    const token = jwt.sign({ id }, process.env.SECRET_JWT, { expiresIn: 10000 })
+
+    res.send({ token })
 }
