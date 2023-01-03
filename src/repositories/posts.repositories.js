@@ -27,6 +27,7 @@ export function insertPostHashtag (post_id, hashtag_id) {
 export function selectPosts () {
     return connection.query(`
         SELECT 
+            p.id,
             u.image AS user_image,
             u.name AS user_name,
             p.url,
@@ -35,4 +36,20 @@ export function selectPosts () {
         JOIN users u ON u.id = p.user_id
         LIMIT 20
     `)
+}
+
+export function selectPostById (id) {
+    return connection.query('SELECT * FROM posts WHERE id=$1', [id])
+}
+
+export function deleteHashtags (post_id) {
+    return connection.query('DELETE FROM posts_hashtags WHERE post_id=$1', [post_id])
+}
+
+export function deletePostId (id) {
+    return connection.query('DELETE FROM posts WHERE id=$1',[id])
+}
+
+export function deleteLikes (post_id) {
+    return connection.query('DELETE FROM likes WHERE post_id=$1', [post_id])
 }

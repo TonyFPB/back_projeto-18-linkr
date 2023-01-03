@@ -1,4 +1,4 @@
-import { insertPost, insertPostHashtag, insertPostNoMsg, selectPostByMessage, selectPosts } from "../repositories/posts.repositories.js"
+import { deleteHashtags, deleteLikes, deletePostId, insertPost, insertPostHashtag, insertPostNoMsg, selectPostByMessage, selectPosts } from "../repositories/posts.repositories.js"
 
 export async function postNew (req, res) {
     const {user_id,url,message,hashtags_id} = req.post
@@ -34,6 +34,27 @@ export async function getPosts (req, res) {
         res.send(rows)
     } catch (error) {
         console.log(error)
+        res.sendStatus(500)
+    }
+}
+
+export async function putPost (req, res) {
+    const {url, message, changed} = req.post
+
+    res.send(req.post)
+}
+
+export async function deletePost (req, res) {
+    const {post_id, user_id} = req.post 
+
+    try {
+        await deleteHashtags(post_id)
+        await deleteLikes(post_id)
+        await deletePostId(post_id)
+
+        res.sendStatus(204)
+    } catch (erro) {
+        console.log(erro)
         res.sendStatus(500)
     }
 }
