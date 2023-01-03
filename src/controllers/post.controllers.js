@@ -1,4 +1,4 @@
-import { insertPost, insertPostHashtag, insertPostNoMsg, selectPostByMessage } from "../repositories/posts.repositories.js"
+import { insertPost, insertPostHashtag, insertPostNoMsg, selectPostByMessage, selectPosts } from "../repositories/posts.repositories.js"
 
 export async function postNew (req, res) {
     const {user_id,url,message,hashtags_id} = req.post
@@ -26,4 +26,14 @@ export async function postNew (req, res) {
         res.sendStatus(500)
     }
 
+}
+
+export async function getPosts (req, res) {
+    try {
+        const {rows}  = await selectPosts()
+        res.send(rows)
+    } catch (error) {
+        console.log(error)
+        res.sendStatus(500)
+    }
 }

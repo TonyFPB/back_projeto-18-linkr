@@ -23,3 +23,16 @@ export function selectPostByMessage (message) {
 export function insertPostHashtag (post_id, hashtag_id) {
     return connection.query('INSERT INTO posts_hashtags (post_id, hashtag_id) VALUES ($1,$2)', [post_id, hashtag_id])
 }
+
+export function selectPosts () {
+    return connection.query(`
+        SELECT 
+            u.image AS user_image,
+            u.name AS user_name,
+            p.url,
+            p.message
+        FROM posts p
+        JOIN users u ON u.id = p.user_id
+        LIMIT 20
+    `)
+}
