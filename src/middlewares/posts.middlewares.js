@@ -3,6 +3,7 @@ import { postSchema } from "../schemas/posts.schemas.js";
 
 export async function validatePost (req, res, next) {
     const body = req.body
+    const user_id = res.locals
 
     const validation = postSchema.validate(body, { abortEarly: false });
     if (validation.error) {
@@ -51,7 +52,7 @@ export async function validatePost (req, res, next) {
       }
      
       req.post = {
-        user_id: 1,
+        user_id,
         url: body.url,
         message,
         hashtags_id
