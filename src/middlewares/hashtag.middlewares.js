@@ -1,12 +1,10 @@
 import connection from "../db/db.js";
+import { hashtagExistValidate } from "../repositories/hashtags.repositories.js";
 
 export async function hashtagValidation(req,res,next){
     const {hashtag} = req.params
 
-    const hashtagValidate =  await connection.query(
-    `
-        SELECT * FROM hashtags WHERE name = ($1)
-    `, [hashtag])
+    const hashtagValidate =  await hashtagExistValidate(hashtag)
 
     console.log(hashtagValidate.rows[0].id)
 
