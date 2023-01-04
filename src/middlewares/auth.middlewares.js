@@ -22,7 +22,7 @@ export async function authenticationSignIn(req, res, next) {
     try {
         const userExists = await findUser(email)
         if (userExists.rowCount === 0 || !bcrypt.compareSync(password, userExists.rows[0].password)) {
-            return res.status(401).send({ message: "Email e/ou password incorretos." })
+            return res.status(401).send({ message: "Incorrect email or password." })
         }
         res.locals = userExists.rows[0].id
     } catch (err) {
