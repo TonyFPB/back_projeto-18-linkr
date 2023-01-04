@@ -7,7 +7,7 @@ const router = express.Router()
 
 router.post("/post", authTokenValidate, validatePost, postNew)
 router.get("/post", authTokenValidate, getPosts)
-router.put("/post/:id", authTokenValidate, validatePutPost)
+router.put("/post/:id", authTokenValidate, validatePutPost, putPost)
 router.delete("/post/:post_id", authTokenValidate, validateDeletePost, deletePost)
 
 export default router

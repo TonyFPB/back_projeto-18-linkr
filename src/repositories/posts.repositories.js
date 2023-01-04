@@ -53,3 +53,11 @@ export function deletePostId (id) {
 export function deleteLikes (post_id) {
     return connection.query('DELETE FROM likes WHERE post_id=$1', [post_id])
 }
+
+export function updateUrl (url, message, id) {
+    return connection.query('UPDATE posts SET url=$1, message=$2 WHERE id=$3',[url, message, id])
+}
+
+export function deleteHashtagById (post_id, hashtag_id) {
+    return connection.query('DELETE FROM posts_hashtags WHERE post_id = $1 AND hashtag_id = $2',[post_id, hashtag_id])
+}

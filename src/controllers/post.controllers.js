@@ -1,4 +1,4 @@
-import { deleteHashtags, deleteLikes, deletePostId, insertPost, insertPostHashtag, insertPostNoMsg, selectPostByMessage, selectPosts } from "../repositories/posts.repositories.js"
+import { deleteHashtagById, deleteHashtags, deleteLikes, deletePostId, insertPost, insertPostHashtag, insertPostNoMsg, selectPostByMessage, selectPosts, updateUrl } from "../repositories/posts.repositories.js"
 
 export async function postNew (req, res) {
     const {user_id,url,message, hashtags} = req.post
@@ -19,9 +19,8 @@ export async function postNew (req, res) {
         const {rows} = await selectPostByMessage(message)
         
         const post_id = rows[rows.length - 1].id
-        console.log(post_id)
-        //tá dando errado
-        for (let id of hashtags) {await insertPostHashtag(post_id, id); console.log(id)}
+
+        for (let id of hashtags) await insertPostHashtag(post_id, id)
 
         res.sendStatus(201)
     } catch (erro) {
@@ -42,9 +41,21 @@ export async function getPosts (req, res) {
 }
 
 export async function putPost (req, res) {
-    const {url, message, changed} = req.post
+    const {id, url, message, changed, toDelete, toUpdate} = req.post
 
-    res.send(req.post)
+    try {
+        await updateUrl(url, message, id)
+
+        if (!changed) return res.sendStatus(201)
+
+        if (toDelete.length !== 0) for (let hashtag_id of toDelete) await deleteHashtagById(id, hashtag_id)
+        if (toUpdate.length !== 0) for (let hashtag_id of toUpdate) await insertPostHashtag(id, hashtag_id)
+
+        return res.sendStatus(201)
+    } catch (erro) {
+        console.log(erro)
+        res.sendStatus(500)
+    }
 }
 
 export async function deletePost (req, res) {

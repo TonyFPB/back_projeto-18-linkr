@@ -2,6 +2,7 @@ import { insertHashtag, selectHashtag, selectPostById } from "../repositories/po
 import { postSchema } from "../schemas/posts.schemas.js";
 
 async function arrayHashtags (message) {
+  console;log(message)
   const msg = message.split(" ")
 
   const hashtags = []
@@ -71,19 +72,20 @@ export async function validatePutPost (req, res, next) {
     if (rows.length === 0) return res.sendStatus(404)
     if (user_id !== rows[0].user_id) return res.sendStatus(401)
 
-    if (rows[0].message === body.message) req.post = {...body, changed: false}
+    if (rows[0].message === body.message) {req.post = {...body, changed: false}; next()}
     else {
      
       const newHashtags = await arrayHashtags(body.message)
       const oldHashtags = await arrayHashtags(rows[0].message)
-
+      
       const toDelete = []
       const toUpdate = []
 
       for (let i of oldHashtags) if (!newHashtags.includes(i)) toDelete.push(i)
       for (let i of newHashtags) if (!oldHashtags.includes(i)) toUpdate.push(i)
 
-      res.send(toDelete + "la" + toUpdate)
+      req.post = {...body, id, changed: true, toDelete, toUpdate}
+      next()
     }
 
   } catch (error) {
