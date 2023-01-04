@@ -1,0 +1,9 @@
+DATABASE_URL=postgres://linkr_rbw4_user:2tadwzMwy30V4EtmdNnHUn9l2RfULpfV@dpg-ceppe5mn6mpkfa129gm0-a.oregon-postgres.render.com/linkr_rbw4
+PORT=
+SECRET_JWT =SvxG09k95G0NW7OQ7nzjOrZjUi4BBpPaVTQ5nCQRDY4NBFGR8FBk9kv5SSA4if9hWd5FMluLOePRJzVlSmPH4xTF3DhbNfBul27ltlRcU01h3YOJw589nZ6nSN8jMGa7
+
+
+
+Conectando ao banco
+psql -h dpg-ceppe5mn6mpkfa129gm0-a.oregon-postgres.render.com -U linkr_rbw4_user linkr_rbw4
+PGPASSWORD=2tadwzMwy30V4EtmdNnHUn9l2RfULpfV
