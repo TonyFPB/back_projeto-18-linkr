@@ -3,7 +3,7 @@ import cors from  "cors";
 import dotenv from "dotenv";
 
 import postRouter from "./routes/posts.routes.js"
-import authRouter from "./routes/auth.routes.js"
+import authRoutes from "./routes/auth.routes.js"
 import usersRoutes from "./routes/users.routes.js";
 import likes from "./routes/likes.routes.js";
 
