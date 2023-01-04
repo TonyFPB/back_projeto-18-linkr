@@ -8,11 +8,13 @@ export async function hashtagValidation(req,res,next){
         SELECT * FROM hashtags WHERE name = ($1)
     `, [hashtag])
 
+    console.log(hashtagValidate.rows[0].id)
+
     if (hashtagValidate.rows.length===0){
         return res.sendStatus(404)
     }
 
-    req.hashtag = hashtagValidate.rows[0]
+    req.hashtagId = hashtagValidate.rows[0].id
     
     next()
 }
