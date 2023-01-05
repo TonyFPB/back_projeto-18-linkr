@@ -4,12 +4,26 @@ export function findUserById(id) {
     return connection.query(`SELECT * FROM users WHERE id=$1;`, [id]);
 }
 
-export function insertLikes(user_id, post_id,createdAt){
-    return connection.query(`INSERT INTO likes (user_id,post_id, createdAt) VALUES ($1,$2,$3);`,[user_id,post_id,createdAt]);
+export function insertLikes(user_id, post_id, createdAt) {
+    return connection.query(`INSERT INTO likes (user_id,post_id, createdAt) VALUES ($1,$2,$3);`, [user_id, post_id, createdAt]);
 }
 
-export function getLikes(post_id ){
+export function getLikesFromUser(post_id, user_id) {
     return connection.query(`
-    SELECT COUNT(likes.id)::INTEGER FROM likes WHERE post_id =$1;`,[post_id ]
+    SELECT * FROM likes WHERE user_id = $1 AND post_id = $2;`, [post_id, user_id]
     );
+}
+
+export function getAllPostLikes(post_id, user_id) {
+    return connection.query(`
+    SELECT likes.user_id, users.id, users.name 
+    FROM likes 
+    JOIN users 
+    ON users.id = likes.user_id 
+    WHERE likes.post_id = $1 
+    ORDER BY RANDOM();
+    `[post_id]);
+}
+export function deleteLike(user_id, post_id) {
+    return connection.query(`DELETE FROM likes WHERE user_id = $1 AND post_id = $2;`, [user_id, post_id]);
 }
