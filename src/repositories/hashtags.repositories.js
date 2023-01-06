@@ -1,7 +1,7 @@
 import connection from "../db/db.js";
 
 export function getTrendingsOrder(){
-    return connection.query(`select hashtags.name, count(posts_hashtags.hashtag_id) as qnt from posts_hashtags join hashtags on posts_hashtags.hashtag_id=hashtags.id where posts_hashtags."createdAt" >= current_timestamp - INTERVAL '24' HOUR group by posts_hashtags.hashtag_id, hashtags.name order by qnt desc;`)
+    return connection.query(`select hashtags.name, count(posts_hashtags.hashtag_id) as qnt from posts_hashtags join hashtags on posts_hashtags.hashtag_id=hashtags.id where posts_hashtags."createdAt" >= current_timestamp - INTERVAL '24' HOUR group by posts_hashtags.hashtag_id, hashtags.name order by qnt desc limit '10';`)
 }
 
 export function getPostsByHashtag(hashtagId){
