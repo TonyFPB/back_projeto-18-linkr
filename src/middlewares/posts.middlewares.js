@@ -28,9 +28,9 @@ async function arrayHashtags (message) {
     }
 
     return hashtags_id
+
   } catch (error) {
-    console.log(error)
-    res.sendStatus(500)
+    return error
   }
 }
 
@@ -43,16 +43,23 @@ export async function validatePost (req, res, next) {
         const erros = validation.error.details.map((detail) => detail.message);
         return res.status(422).send(erros);
       }
+    
+    try {
+      const {message} = req.body
+      const hashtags = await arrayHashtags(message)
 
-    const {message} = req.body
-    const hashtags = await arrayHashtags(message)
+      req.post = {
+        ...body,
+        user_id,
+        hashtags
+      }
+      
+      next()
 
-    req.post = {
-      ...body,
-      user_id,
-      hashtags
+    } catch (error) {
+      console.log(error)
+      res.sendStatus(500)
     }
-    next()
 }
 
 export async function validatePutPost (req, res, next) {
