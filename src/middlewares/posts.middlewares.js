@@ -2,7 +2,7 @@ import { insertHashtag, selectHashtag, selectPostById } from "../repositories/po
 import { postSchema } from "../schemas/posts.schemas.js";
 
 async function arrayHashtags (message) {
-  console;log(message)
+  console.log(message)
   const msg = message.split(" ")
 
   const hashtags = []

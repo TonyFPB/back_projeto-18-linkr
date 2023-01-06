@@ -9,10 +9,12 @@ export async function validUsers(req, res, next) {
         if (userExists.rowCount === 0) {
             return res.sendStatus(404);
         }
+
         if (!postId) {
             return res.sendStatus(404);
         }
 
+        
         res.locals.user_id = userExists.rows[0].id;
         res.locals.post_id = postId;
         next();
