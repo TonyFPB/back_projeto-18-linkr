@@ -1,4 +1,5 @@
 import connection from "../db/db.js";
+import urlMetadata from 'url-metadata'
 
 export function selectHashtag (body) {
     return connection.query('SELECT * FROM hashtags WHERE name = $1', [body])
@@ -28,6 +29,7 @@ export function selectPosts () {
     return connection.query(`
         SELECT 
             p.id,
+            u.id AS user_id,
             u.image AS user_image,
             u.name AS user_name,
             p.url,
@@ -60,4 +62,10 @@ export function updateUrl (url, message, id) {
 
 export function deleteHashtagById (post_id, hashtag_id) {
     return connection.query('DELETE FROM posts_hashtags WHERE post_id = $1 AND hashtag_id = $2',[post_id, hashtag_id])
+}
+
+export function metadata (url) {
+    const promisse =urlMetadata(url)
+    const data = promisse.then(data => {return data})
+    return data
 }
