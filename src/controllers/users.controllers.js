@@ -6,7 +6,8 @@ import {
 
 export async function getUserById(req, res) {
   try {
-    const id = res.locals;
+    //const id = res.locals;
+    const { id } = req.params;
 
     const postsUser = await getPostsLikesUser(id);
 
