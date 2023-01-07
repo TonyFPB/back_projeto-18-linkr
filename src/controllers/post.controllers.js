@@ -1,102 +1,116 @@
-import getMetaData from "metadata-scraper"
-import { deleteHashtagById, deleteHashtags, deleteLikes, deletePostId, insertPost, insertPostHashtag, insertPostNoMsg, metadata, selectPostByMessage, selectPosts, updateUrl } from "../repositories/posts.repositories.js"
+import getMetaData from "metadata-scraper";
+import {
+  deleteHashtagById,
+  deleteHashtags,
+  deleteLikes,
+  deletePostId,
+  insertPost,
+  insertPostHashtag,
+  insertPostNoMsg,
+  metadata,
+  selectPostByMessage,
+  selectPosts,
+  updateUrl,
+} from "../repositories/posts.repositories.js";
 
+export async function postNew(req, res) {
+  const { user_id, url, message, hashtags } = req.post;
 
-export async function postNew (req, res) {
-    const {user_id,url,message, hashtags} = req.post
-
-    try {
-        if (!message) {
-            await insertPostNoMsg(user_id,url)
-            return res.sendStatus(201)
-        }
-
-        if (hashtags.length === 0) {
-            await insertPost(user_id,url,message)
-            return res.sendStatus(201)
-        }
-
-        await insertPost(user_id,url,message)
-
-        const {rows} = await selectPostByMessage(message)
-
-        const post_id = rows[rows.length - 1].id
-
-        for (let id of hashtags) await insertPostHashtag(post_id, id)
-
-        res.sendStatus(201)
-    } catch (erro) {
-        console.log(erro)
-        res.sendStatus(500)
+  try {
+    if (!message) {
+      await insertPostNoMsg(user_id, url);
+      return res.sendStatus(201);
     }
 
+    if (hashtags.length === 0) {
+      await insertPost(user_id, url, message);
+      return res.sendStatus(201);
+    }
+
+    await insertPost(user_id, url, message);
+
+    const { rows } = await selectPostByMessage(message);
+
+    const post_id = rows[rows.length - 1].id;
+
+    for (let id of hashtags) await insertPostHashtag(post_id, id);
+
+    res.sendStatus(201);
+  } catch (erro) {
+    console.log(erro);
+    res.sendStatus(500);
+  }
 }
 
-export async function getPosts (req, res) {
-    const user_id = res.locals
+export async function getPosts(req, res) {
+  const user_id = res.locals;
 
-    try {
-        const {rows}  = await selectPosts()
+  try {
+    const { rows } = await selectPosts();
+    // const oi = await getMetaData(rows[0].url);
+    // console.log("oi", oi);
 
-        const metadata = []
-        for (let post of rows) {
-            const {title, description, image} = await getMetaData(post.url)
-            metadata.push({title, description, image} )
-        }
-
-        const data = rows.map((post) => {
-            const aux =  {
-                id: post.id,
-                owner: (post.user_id === user_id),
-                image: post.user_image,
-                name: post.user_name,
-                message: post.message,
-                url: post.url
-            }
-            return aux
-        })
-
-        const response = []
-        for (let i in data) {
-            response.push({...data[i], metadata: metadata[i]})
-        }
-
-        res.send(response)
-    } catch (error) {
-        console.log(error)
-        res.sendStatus(500)
+    const metadata = [];
+    for (let post of rows) {
+      const { title, description, image } = await getMetaData(post.url);
+      metadata.push({ title, description, image });
     }
+
+    const data = rows.map((post) => {
+      const aux = {
+        id: post.id,
+        owner: post.user_id === user_id,
+        image: post.user_image,
+        name: post.user_name,
+        message: post.message,
+        url: post.url,
+      };
+      return aux;
+    });
+
+    const response = [];
+    for (let i in data) {
+      response.push({ ...data[i], metadata: metadata[i] });
+    }
+
+    res.send(response);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+  }
 }
 
-export async function putPost (req, res) {
-    const {id, url, message, changed, toDelete, toUpdate} = req.post
+export async function putPost(req, res) {
+  const { id, url, message, changed, toDelete, toUpdate } = req.post;
 
-    try {
-        await updateUrl(url, message, id)
+  try {
+    await updateUrl(url, message, id);
 
-        if (!changed) return res.sendStatus(201)
+    if (!changed) return res.sendStatus(201);
 
-        if (toDelete.length !== 0) for (let hashtag_id of toDelete) await deleteHashtagById(id, hashtag_id)
-        if (toUpdate.length !== 0) for (let hashtag_id of toUpdate) await insertPostHashtag(id, hashtag_id)
+    if (toDelete.length !== 0)
+      for (let hashtag_id of toDelete) await deleteHashtagById(id, hashtag_id);
+    if (toUpdate.length !== 0)
+      for (let hashtag_id of toUpdate) await insertPostHashtag(id, hashtag_id);
 
-        return res.sendStatus(201)
-    } catch (erro) {
-        console.log(erro)
-        res.sendStatus(500)
-    }
+    return res.sendStatus(201);
+  } catch (erro) {
+    console.log(erro);
+    res.sendStatus(500);
+  }
 }
 
-export async function deletePost (req, res) {
-    const {post_id, user_id} = req.post
+export async function deletePost(req, res) {
+  const { post_id, user_id } = req.post;
 
-    try {
-        await deleteHashtags(post_id)
-        await deleteLikes(post_id)
-        await deletePostId(post_id)
+  try {
+    await deleteHashtags(post_id);
+    await deleteLikes(post_id);
+    await deletePostId(post_id);
 
-        res.sendStatus(204)
-    } catch (erro) {
-        console.log(erro)
-        res.sendStatus(500)
-    }
+    res.sendStatus(204);
+  } catch (erro) {
+    console.log(erro);
+    res.sendStatus(500);
+  }
 }
