@@ -1,4 +1,3 @@
-import getMetaData from "metadata-scraper";
 import {
   deleteHashtagById,
   deleteHashtags,
@@ -7,7 +6,7 @@ import {
   insertPost,
   insertPostHashtag,
   insertPostNoMsg,
-  metadata,
+  insertMetadata,
   selectPostByMessage,
   selectPosts,
   updateUrl,
@@ -51,13 +50,7 @@ export async function getPosts(req, res) {
   try {
     const { rows } = await selectPosts();
 
-    const metadata = [];
-    for (let post of rows) {
-      const { title, description, image } = await getMetaData(post.url);
-      metadata.push({ title, description, image });
-    }
-
-    const data = rows.map((post) => {
+    const response = rows.map((post) => {
       const aux = {
         id: post.id,
         owner: post.user_id === user_id,
@@ -65,14 +58,14 @@ export async function getPosts(req, res) {
         name: post.user_name,
         message: post.message,
         url: post.url,
+        metadata: {
+            title: post.title,
+            description: post.description,
+            image: post.image
+        }
       };
       return aux;
     });
-
-    const response = [];
-    for (let i in data) {
-      response.push({ ...data[i], metadata: metadata[i] });
-    }
 
     res.send(response);
   } catch (error) {
