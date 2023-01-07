@@ -3,11 +3,12 @@ import { getPostsByHashtag, getTrendingsOrder } from "../repositories/hashtags.r
 
 export async function getPostsWithTheHashtag(req,res){
     const hashtagId = req.hashtagId
+    const user_id = res.locals
 
     console.log(hashtagId)
 
     try {
-        const postsWithTheHashtag = await getPostsByHashtag(hashtagId)
+        const postsWithTheHashtag = await getPostsByHashtag(user_id, hashtagId)
 
         console.log(postsWithTheHashtag)
 
