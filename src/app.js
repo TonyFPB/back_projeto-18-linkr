@@ -6,6 +6,7 @@ import postRouter from "./routes/posts.routes.js"
 import authRoutes from "./routes/auth.routes.js"
 import usersRoutes from "./routes/users.routes.js";
 import likes from "./routes/likes.routes.js";
+import hashtagsRoutes from "./routes/hashtags.routes.js"
 
 dotenv.config();
 
@@ -17,6 +18,7 @@ app.use(postRouter)
 app.use(authRoutes)
 app.use(usersRoutes)
 app.use(likes)
+app.use(hashtagsRoutes)
 
 const PORT = process.env.PORT || 5000
 
