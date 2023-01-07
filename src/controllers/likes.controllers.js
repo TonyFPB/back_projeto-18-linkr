@@ -1,4 +1,4 @@
-import { deleteLike, getAllPostLikes, getLikes, getLikesFromUser, insertLikes } from "../repositories/likes.repositories.js";
+import { deleteLike, getAllPostLikes, getLikesFromUser, insertLikes } from "../repositories/likes.repositories.js";
 //adicionando o like
 export async function postLikes(req, res) {
     const user_id = res.locals.user_id;
