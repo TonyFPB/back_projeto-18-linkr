@@ -1,9 +1,8 @@
-import getMetaData from "metadata-scraper"
-import { deleteHashtagById, deleteHashtags, deleteLikes, deletePostId, insertPost, insertPostHashtag, insertPostNoMsg, metadata, selectPostByMessage, selectPosts, updateUrl } from "../repositories/posts.repositories.js"
+import { deleteHashtagById, deleteHashtags, deleteLikes, deletePostId, insertPost, insertPostHashtag, insertPostNoMsg, insertMetadata, selectPostByMessage, selectPosts, updateUrl } from "../repositories/posts.repositories.js"
 
 
 export async function postNew (req, res) {
-    const {user_id,url,message, hashtags} = req.post
+    const {user_id,url,message, hashtags, metadata} = req.post
 
     try {
         if (!message) {
@@ -19,8 +18,11 @@ export async function postNew (req, res) {
         await insertPost(user_id,url,message)
 
         const {rows} = await selectPostByMessage(message)
-
+        
         const post_id = rows[rows.length - 1].id
+
+        const {title, description, image} = metadata
+        await insertMetadata(post_id, title, description, image)
 
         for (let id of hashtags) await insertPostHashtag(post_id, id)
 
@@ -37,29 +39,21 @@ export async function getPosts (req, res) {
 
     try {
         const {rows}  = await selectPosts()
-
-        const metadata = []
-        for (let post of rows) {
-            const {title, description, image} = await getMetaData(post.url)
-            metadata.push({title, description, image} )
-        }
-
-        const data = rows.map((post) => {
-            const aux =  {
+        const response = rows.map((post) => {
+            return {
                 id: post.id,
                 owner: (post.user_id === user_id),
                 image: post.user_image,
                 name: post.user_name,
                 message: post.message,
-                url: post.url
+                url: post.url,
+                metadata : {
+                    title: post.title,
+                    description: post.description,
+                    image: post.image
+                }
             }
-            return aux
         })
-
-        const response = []
-        for (let i in data) {
-            response.push({...data[i], metadata: metadata[i]})
-        }
 
         res.send(response)
     } catch (error) {
