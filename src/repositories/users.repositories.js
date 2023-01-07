@@ -20,7 +20,7 @@ import connection from "../db/db.js";
 export function getPostsLikesUser(id) {
   return connection.query(
     `
-            SELECT u.name, u.image, p.url, p.message, COUNT(l.id) as likes, m.title, m.image, m.description
+            SELECT u.name, u.image, p.user_id, p.id, p.url, p.message, COUNT(l.id) as likes, m.title, m.image, m.description
 
             FROM users u LEFT JOIN posts p ON u.id = p.user_id
 
@@ -28,7 +28,7 @@ export function getPostsLikesUser(id) {
                          LEFT JOIN metadata m ON p.id = m.post_id
                          
             WHERE u.id = $1
-            GROUP BY u.name, u.image, p.url, p.message, m.title, m.image, m.description
+            GROUP BY  u.name, u.image, p.user_id, p.id, p.url, p.message, m.title, m.image, m.description
             ORDER BY likes;
         `,
     [id]

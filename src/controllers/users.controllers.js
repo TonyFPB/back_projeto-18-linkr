@@ -6,12 +6,29 @@ import {
 
 export async function getUserById(req, res) {
   try {
-    //const id = res.locals;
+    const user_id = res.locals;
     const { id } = req.params;
 
     const postsUser = await getPostsLikesUser(id);
 
     const trending = await getTrending();
+
+    // const result = {
+    //   user: {
+    //     name: postsUser.rows[0].name,
+    //     image: postsUser.rows[0].image,
+    //   },
+    //   posts: postsUser.rows.map((p) => {
+    //     return {
+    //       url: p.url,
+    //       message: p.message,
+    //       title: p.title,
+    //       image: p.image,
+    //       description: p.description,
+    //     };
+    //   }),
+    //   trending: trending.rows.map((t) => t.name),
+    // };
 
     const result = {
       user: {
@@ -20,33 +37,21 @@ export async function getUserById(req, res) {
       },
       posts: postsUser.rows.map((p) => {
         return {
+          image: postsUser.rows[0].image,
+          name: postsUser.rows[0].name,
+          id: p.id,
+          owner: user_id === p.user_id,
           url: p.url,
           message: p.message,
-          title: p.title,
-          image: p.image,
-          description: p.description,
+          metadata: {
+            title: p.title,
+            image: p.image,
+            description: p.description,
+          },
         };
       }),
       trending: trending.rows.map((t) => t.name),
     };
-
-    // const result = {
-    //                     user: {
-    //                         name: postsUser.rows[0].name,
-    //                         image: postsUser.rows[0].image
-    //                     },
-    //                     posts: postsUser.rows.map( (p) => {
-
-    //                         return {
-    //                             url: p.url,
-    //                             message: p.message
-
-    //                         }
-    //                     }),
-    //                     trending: trending.rows.map( (t => t.name))
-
-    //                 }
-
     return res.status(200).send(result);
   } catch (error) {
     console.log(error);
