@@ -3,7 +3,6 @@ import { postSchema } from "../schemas/posts.schemas.js";
 import getMetaData from "metadata-scraper"
 
 async function arrayHashtags (message) {
-  console.log(message)
   const msg = message.split(" ")
 
   const hashtags = []
