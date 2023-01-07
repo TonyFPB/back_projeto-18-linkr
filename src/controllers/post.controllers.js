@@ -1,9 +1,9 @@
 import getMetaData from "metadata-scraper"
-import { deleteHashtagById, deleteHashtags, deleteLikes, deletePostId, insertPost, insertPostHashtag, insertPostNoMsg, metadata, selectPostByMessage, selectPosts, updateUrl } from "../repositories/posts.repositories.js"
+import { deleteHashtagById, deleteHashtags, deleteLikes, deletePostId, insertPost, insertPostHashtag, insertPostNoMsg, insertMetadata, selectPostByMessage, selectPosts, updateUrl } from "../repositories/posts.repositories.js"
 
 
 export async function postNew (req, res) {
-    const {user_id,url,message, hashtags} = req.post
+    const {user_id,url,message, hashtags, metadata} = req.post
 
     try {
         if (!message) {
@@ -22,6 +22,9 @@ export async function postNew (req, res) {
 
         const post_id = rows[rows.length - 1].id
 
+        const {title, description, image} = metadata
+        await insertMetadata(post_id, title, description, image)
+        
         for (let id of hashtags) await insertPostHashtag(post_id, id)
 
         res.sendStatus(201)
@@ -39,10 +42,11 @@ export async function getPosts (req, res) {
         const {rows}  = await selectPosts()
 
         const metadata = []
-        for (let post of rows) {
-            const {title, description, image} = await getMetaData(post.url)
-            metadata.push({title, description, image} )
-        }
+        Promise.all(rows.map(post => getMetaData(post.url))).then(({title, description, image}) =>  metadata.push({title, description, image}))
+        // for (let post of rows) {
+        //     const {title, description, image} = await getMetaData(post.url)
+        //     )
+        // }
 
         const data = rows.map((post) => {
             const aux =  {
