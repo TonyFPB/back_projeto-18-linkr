@@ -1,8 +1,8 @@
 import { insertHashtag, selectHashtag, selectPostById } from "../repositories/posts.repositories.js";
 import { postSchema } from "../schemas/posts.schemas.js";
+import getMetaData from "metadata-scraper"
 
 async function arrayHashtags (message) {
-  console.log(message)
   const msg = message.split(" ")
 
   const hashtags = []
@@ -28,9 +28,9 @@ async function arrayHashtags (message) {
     }
 
     return hashtags_id
+
   } catch (error) {
-    console.log(error)
-    res.sendStatus(500)
+    return error
   }
 }
 
@@ -43,16 +43,26 @@ export async function validatePost (req, res, next) {
         const erros = validation.error.details.map((detail) => detail.message);
         return res.status(422).send(erros);
       }
+    
+    try {
+      const {message, url} = req.body
+      const hashtags = await arrayHashtags(message)
+      const {title, description, image} = await getMetaData(url)
+      const metadata = {title, description, image}
+  
+      req.post = {
+        ...body,
+        user_id,
+        hashtags,
+        metadata
+      }
+      
+      next()
 
-    const {message} = req.body
-    const hashtags = await arrayHashtags(message)
-
-    req.post = {
-      ...body,
-      user_id,
-      hashtags
+    } catch (error) {
+      console.log(error)
+      res.sendStatus(500)
     }
-    next()
 }
 
 export async function validatePutPost (req, res, next) {

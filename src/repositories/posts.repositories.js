@@ -1,4 +1,5 @@
 import connection from "../db/db.js";
+import urlMetadata from 'url-metadata'
 
 export function selectHashtag (body) {
     return connection.query('SELECT * FROM hashtags WHERE name = $1', [body])
@@ -28,12 +29,17 @@ export function selectPosts () {
     return connection.query(`
         SELECT 
             p.id,
+            u.id AS user_id,
             u.image AS user_image,
             u.name AS user_name,
             p.url,
-            p.message
+            p.message,
+            m.title,
+            m.description,
+            m.image
         FROM posts p
         JOIN users u ON u.id = p.user_id
+        JOIN metadata m ON m."post_id" = p.id
         LIMIT 20
     `)
 }
@@ -61,3 +67,8 @@ export function updateUrl (url, message, id) {
 export function deleteHashtagById (post_id, hashtag_id) {
     return connection.query('DELETE FROM posts_hashtags WHERE post_id = $1 AND hashtag_id = $2',[post_id, hashtag_id])
 }
+
+export function insertMetadata (post_id, title, description, image) {
+    return connection.query('INSERT INTO metadata (post_id, title, description, image) VALUES ($1,$2,$3,$4)', [post_id, title, description, image])
+}
+
