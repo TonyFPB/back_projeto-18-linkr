@@ -33,6 +33,9 @@ export async function postNew(req, res) {
 
     const post_id = rows[rows.length - 1].id;
 
+    const { title, description, image } = metadata;
+    await insertMetadata(post_id, title, description, image);
+
     for (let id of hashtags) await insertPostHashtag(post_id, id);
 
     res.sendStatus(201);
@@ -47,8 +50,6 @@ export async function getPosts(req, res) {
 
   try {
     const { rows } = await selectPosts();
-    // const oi = await getMetaData(rows[0].url);
-    // console.log("oi", oi);
 
     const metadata = [];
     for (let post of rows) {

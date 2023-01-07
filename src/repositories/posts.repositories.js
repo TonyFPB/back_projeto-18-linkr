@@ -33,9 +33,13 @@ export function selectPosts () {
             u.image AS user_image,
             u.name AS user_name,
             p.url,
-            p.message
+            p.message,
+            m.title,
+            m.description,
+            m.image
         FROM posts p
         JOIN users u ON u.id = p.user_id
+        JOIN metadata m ON m."post_id" = p.id
         LIMIT 20
     `)
 }
@@ -64,8 +68,7 @@ export function deleteHashtagById (post_id, hashtag_id) {
     return connection.query('DELETE FROM posts_hashtags WHERE post_id = $1 AND hashtag_id = $2',[post_id, hashtag_id])
 }
 
-export function metadata (url) {
-    const promisse =urlMetadata(url)
-    const data = promisse.then(data => {return data})
-    return data
+export function insertMetadata (post_id, title, description, image) {
+    return connection.query('INSERT INTO metadata (post_id, title, description, image) VALUES ($1,$2,$3,$4)', [post_id, title, description, image])
 }
+
