@@ -32,12 +32,13 @@ export async function getUserById(req, res) {
 
     const result = {
       user: {
+        id: postsUser.rows[0].user_id,
         name: postsUser.rows[0].name,
-        image: postsUser.rows[0].image,
+        image: postsUser.rows[0].user_image,
       },
       posts: postsUser.rows.map((p) => {
         return {
-          image: postsUser.rows[0].image,
+          image: postsUser.rows[0].user_image,
           name: postsUser.rows[0].name,
           id: p.id,
           owner: user_id === p.user_id,
