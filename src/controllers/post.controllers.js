@@ -10,6 +10,7 @@ import {
   selectPostByMessage,
   selectPosts,
   updateUrl,
+  deleteMetadata,
 } from "../repositories/posts.repositories.js";
 
 export async function postNew(req, res) {
@@ -90,8 +91,9 @@ export async function deletePost(req, res) {
   try {
     await deleteHashtags(post_id);
     await deleteLikes(post_id);
+    await deleteMetadata(post_id)
     await deletePostId(post_id);
-
+    
     res.sendStatus(204);
   } catch (erro) {
     console.log(erro);
