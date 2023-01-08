@@ -40,6 +40,7 @@ export function selectPosts () {
         FROM posts p
         JOIN users u ON u.id = p.user_id
         JOIN metadata m ON m."post_id" = p.id
+        ORDER BY p.id DESC
         LIMIT 20
     `)
 }
