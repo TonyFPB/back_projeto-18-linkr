@@ -60,7 +60,7 @@ export async function getPosts(req, res) {
     res.send(response);
   } catch (error) {
     console.log(error);
-    res.sendStatus(500);
+    res.status(500).send("Unavaible url");
   }
 }
 
