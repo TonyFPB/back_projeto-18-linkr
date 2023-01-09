@@ -10,31 +10,22 @@ import {
   selectPostByMessage,
   selectPosts,
   updateUrl,
+  deleteMetadata,
 } from "../repositories/posts.repositories.js";
 
 export async function postNew(req, res) {
-  const { user_id, url, message, hashtags } = req.post;
-
+  const { user_id, url, message, hashtags, metadata } = req.post;
+  
   try {
-    if (!message) {
-      await insertPostNoMsg(user_id, url);
-      return res.sendStatus(201);
-    }
-
-    if (hashtags.length === 0) {
-      await insertPost(user_id, url, message);
-      return res.sendStatus(201);
-    }
-
     await insertPost(user_id, url, message);
-
     const { rows } = await selectPostByMessage(message);
-
     const post_id = rows[rows.length - 1].id;
-
+    
     const { title, description, image } = metadata;
     await insertMetadata(post_id, title, description, image);
 
+    if (hashtags.length === 0) return res.sendStatus(201);
+    
     for (let id of hashtags) await insertPostHashtag(post_id, id);
 
     res.sendStatus(201);
@@ -71,7 +62,7 @@ export async function getPosts(req, res) {
     res.send(response);
   } catch (error) {
     console.log(error);
-    res.sendStatus(500);
+    res.status(500).send("Unavaible url");
   }
 }
 
@@ -101,8 +92,9 @@ export async function deletePost(req, res) {
   try {
     await deleteHashtags(post_id);
     await deleteLikes(post_id);
+    await deleteMetadata(post_id)
     await deletePostId(post_id);
-
+    
     res.sendStatus(204);
   } catch (erro) {
     console.log(erro);
