@@ -25,11 +25,11 @@ export function getPostsLikesUser(id) {
             FROM users u LEFT JOIN posts p ON u.id = p.user_id
 
                          LEFT JOIN likes l ON  p.id = l.post_id
-                         LEFT JOIN metadata m ON p.id = m.post_id
+                         JOIN metadata m ON p.id = m.post_id
                          
             WHERE u.id = $1
             GROUP BY u.id, u.name, u.image, p.user_id, p.id, p.url, p.message, m.title, m.image, m.description
-            ORDER BY likes;
+            ORDER BY p.id desc;
         `,
     [id]
   );
