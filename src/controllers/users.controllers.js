@@ -2,6 +2,7 @@ import {
   getPostsLikesUser,
   getTrending,
   findUserByName,
+  findUserImageById
 } from "../repositories/users.repositories.js";
 
 export async function getUserById(req, res) {
@@ -72,4 +73,13 @@ export async function getUserByName(req, res) {
     console.log(error);
     res.status(500).send({ message: "Erro interno no servidor!" });
   }
+}
+
+export async function getUser(req,res){
+  const id = res.locals
+  try{
+    const user = await findUserImageById(id)
+
+    res.send(user.rows[0])
+  }catch(err){}
 }
