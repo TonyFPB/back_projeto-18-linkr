@@ -11,6 +11,7 @@ import {
   selectPosts,
   updateUrl,
   deleteMetadata,
+  getPostsByHashtag,
 } from "../repositories/posts.repositories.js";
 
 export async function postNew(req, res) {
@@ -99,5 +100,23 @@ export async function deletePost(req, res) {
   } catch (erro) {
     console.log(erro);
     res.sendStatus(500);
+  }
+}
+
+export async function getPostsWithTheHashtag(req,res){
+  const hashtagId = req.hashtagId
+  const user_id = res.locals
+
+  console.log(hashtagId)
+
+  try {
+      const postsWithTheHashtag = await getPostsByHashtag(user_id, hashtagId)
+
+      console.log(postsWithTheHashtag)
+
+      res.status(200).send(postsWithTheHashtag.rows)
+  } catch (error) {
+      console.log(error)
+      res.sendStatus(500)
   }
 }

@@ -75,3 +75,7 @@ export function insertMetadata (post_id, title, description, image) {
     return connection.query('INSERT INTO metadata (post_id, title, description, image) VALUES ($1,$2,$3,$4)', [post_id, title, description, image])
 }
 
+export function getPostsByHashtag(user_id, hashtagId){
+    return connection.query(`SELECT posts.id, (user_id = ($1)) AS owner, users.image, users.name, posts.message, posts.url, (SELECT row_to_json(m) FROM (SELECT metadata.title, metadata.description, metadata.image FROM metadata WHERE post_id = posts.id)m) AS metadata FROM posts JOIN metadata ON post_id = posts.id JOIN users ON user_id = users.id JOIN posts_hashtags ON posts_hashtags.post_id = posts.id WHERE posts_hashtags.hashtag_id = ($2) LIMIT '20'`,[user_id, hashtagId])
+}
+

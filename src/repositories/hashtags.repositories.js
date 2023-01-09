@@ -1,11 +1,7 @@
 import connection from "../db/db.js";
 
 export function getTrendingsOrder(){
-    return connection.query(`select hashtags.name, count(posts_hashtags.hashtag_id) as qnt from posts_hashtags join hashtags on posts_hashtags.hashtag_id=hashtags.id where posts_hashtags."createdAt" >= current_timestamp - INTERVAL '24' HOUR group by posts_hashtags.hashtag_id, hashtags.name order by qnt desc;`)
-}
-
-export function getPostsByHashtag(hashtagId){
-    return connection.query(`SELECT posts.* FROM posts join posts_hashtags on posts.id = posts_hashtags.post_id where posts_hashtags.hashtag_id = ($1)`,[hashtagId])
+    return connection.query(`SELECT hashtags.name, count(posts_hashtags.hashtag_id) AS qnt FROM posts_hashtags JOIN hashtags ON posts_hashtags.hashtag_id=hashtags.id WHERE posts_hashtags."createdAt" >= current_timestamp - INTERVAL '24' HOUR GROUP BY posts_hashtags.hashtag_id, hashtags.name ORDER BY qnt DESC LIMIT '10';`)
 }
 
 export function hashtagExistValidate(hashtag){

@@ -6,8 +6,6 @@ export async function hashtagValidation(req,res,next){
 
     const hashtagValidate =  await hashtagExistValidate(hashtag)
 
-    console.log(hashtagValidate.rows[0].id)
-
     if (hashtagValidate.rows.length===0){
         return res.sendStatus(404)
     }
