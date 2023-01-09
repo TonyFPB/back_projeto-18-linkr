@@ -38,6 +38,7 @@ export async function getUserById(req, res) {
       },
       posts: postsUser.rows.map((p) => {
         return {
+          post_user_id: postsUser.rows[0].post_user_id,
           image: postsUser.rows[0].user_image,
           name: postsUser.rows[0].name,
           id: p.id,
