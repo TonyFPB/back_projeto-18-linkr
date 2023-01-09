@@ -53,16 +53,17 @@ export async function getPosts(req, res) {
     const response = rows.map((post) => {
       const aux = {
         id: post.id,
+        post_user_id: post.user_id,
         owner: post.user_id === user_id,
         image: post.user_image,
         name: post.user_name,
         message: post.message,
         url: post.url,
         metadata: {
-            title: post.title,
-            description: post.description,
-            image: post.image
-        }
+          title: post.title,
+          description: post.description,
+          image: post.image,
+        },
       };
       return aux;
     });
