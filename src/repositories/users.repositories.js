@@ -20,7 +20,7 @@ import connection from "../db/db.js";
 export function getPostsLikesUser(id) {
   return connection.query(
     `
-            SELECT u.id as user_id,u.name, u.image as user_image, p.user_id, p.id, p.url, p.message, COUNT(l.id) as likes, m.title, m.image, m.description
+            SELECT u.id as user_id,u.name, u.image as user_image, p.user_id as post_user_id, p.id, p.url, p.message, COUNT(l.id) as likes, m.title, m.image, m.description
 
             FROM users u LEFT JOIN posts p ON u.id = p.user_id
 
