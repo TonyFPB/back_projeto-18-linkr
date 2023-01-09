@@ -61,7 +61,7 @@ export async function validatePost (req, res, next) {
 
     } catch (error) {
       console.log(error)
-      res.sendStatus(500)
+      res.status(500).send("Unavaible url")
     }
 }
 

@@ -40,6 +40,7 @@ export function selectPosts () {
         FROM posts p
         JOIN users u ON u.id = p.user_id
         JOIN metadata m ON m."post_id" = p.id
+        ORDER BY p.id DESC
         LIMIT 20
     `)
 }
@@ -59,7 +60,9 @@ export function deletePostId (id) {
 export function deleteLikes (post_id) {
     return connection.query('DELETE FROM likes WHERE post_id=$1', [post_id])
 }
-
+export function deleteMetadata (post_id) {
+    return connection.query('DELETE FROM metadata WHERE post_id=$1', [post_id])
+}
 export function updateUrl (url, message, id) {
     return connection.query('UPDATE posts SET url=$1, message=$2 WHERE id=$3',[url, message, id])
 }
