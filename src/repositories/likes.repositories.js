@@ -23,7 +23,7 @@ export function getAllPostLikes(post_id) {
     ON  likes.user_id = users.id
     WHERE likes.post_id = $1 
     ORDER BY RANDOM();
-    `[post_id]);
+    `,[post_id]);
 }
 
 export function deleteLike(user_id, post_id) {
