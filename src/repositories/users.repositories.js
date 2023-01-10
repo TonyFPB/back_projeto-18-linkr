@@ -58,6 +58,10 @@ export function findUserByName(name) {
   //    ,['%' + name + '%' ])
 }
 
+// export function findUserImageById(id){
+//   return connection.query(`SELECT image FROM users WHERE id=$1`,[id])
+// }
+
 export function findUserImageById(id){
-  return connection.query(`SELECT image FROM users WHERE id=$1`,[id])
+  return connection.query(`SELECT * FROM users WHERE id=$1`,[id])
 }

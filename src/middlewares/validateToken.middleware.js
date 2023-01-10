@@ -24,6 +24,6 @@ export function authTokenValidate(req, res, next) {
     }
    
     res.locals = decodedJWT.id
-
+    
     next()
 }
