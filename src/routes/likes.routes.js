@@ -5,7 +5,7 @@ import { authTokenValidate } from "../middlewares/validateToken.middleware.js";
 
 const route = Router();
 
-route.post("/likes/:id", authTokenValidate, validUsers, postLikes);
-route.get("/likes/:id", authTokenValidate, validUsers, getAllLikes);
-route.delete("/likes:id",authTokenValidate, validUsers, removeLikes);
+route.post("/likes/:post_id", authTokenValidate, validUsers, postLikes);
+route.get("/likes/:post_id", authTokenValidate, validUsers, getAllLikes);
+route.delete("/likes/:post_id",authTokenValidate, validUsers, removeLikes);
 export default route;

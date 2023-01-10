@@ -2,7 +2,7 @@ import { findUserById } from "../repositories/likes.repositories.js";
 
 export async function validUsers(req, res, next) {
     const id = res.locals;
-    const { postId } = req.body;
+    const { post_id } = req.params;
     try {
         const userExists = await findUserById(id);
 
@@ -10,13 +10,11 @@ export async function validUsers(req, res, next) {
             return res.sendStatus(404);
         }
 
-        if (!postId) {
+        if (!post_id) {
             return res.sendStatus(404);
         }
 
-        
-        res.locals.user_id = userExists.rows[0].id;
-        res.locals.post_id = postId;
+        req.data = { user_id: userExists.rows[0].id, post_id: post_id }
         next();
     } catch (error) {
         console.error(error);
