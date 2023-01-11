@@ -1,7 +1,10 @@
 import express from "express";
-import { authTokenValidate } from "../middlewares/validateToken.middleware";
+import {getFeed} from "../controllers/feed.controllers.js";
+import { authTokenValidate } from "../middlewares/validateToken.middleware.js";
 
 
 const router = express.Router()
 
-router.get('/feed', authTokenValidate, (req, res) => res.send("ok"))
+router.get('/feed', authTokenValidate, getFeed)
+
+export default router

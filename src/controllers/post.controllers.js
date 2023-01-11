@@ -14,6 +14,7 @@ import {
   insertRepostOnFeed,
   deletePostOnFeed,
   getPostsByHashtag,
+  deleteFeed,
 } from "../repositories/posts.repositories.js";
 
 export async function postNew(req, res) {
@@ -139,5 +140,17 @@ export async function getPostsWithTheHashtag(req,res){
   } catch (error) {
       console.log(error)
       res.sendStatus(500)
+  }
+}
+export async function unrepost (req, res) {
+  const {feed_id} = req.data
+
+  try {
+    await deleteFeed()
+
+    res.sendStatus(204)
+  } catch (erro) {
+    console.log(erro)
+    res.sendStatus(500)
   }
 }

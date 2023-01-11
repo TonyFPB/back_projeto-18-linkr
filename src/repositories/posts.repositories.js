@@ -115,3 +115,9 @@ export function insertRepostOnFeed(post_id, user_id) {
 export function deletePostOnFeed(post_id) {
   return connection.query("DELETE FROM feed WHERE post_id=$1", [post_id]);
 }
+export function findOnFeed (post_id, user_id){
+  return connection.query("SELECT * FROM feed WHERE post_id = $1 AND user_id = $2", [post_id, user_id])
+}
+export function deleteFeed (feed_id) {
+  return connection.query('DELETE FROM feed WHERE id = $1', [feed_id])
+}

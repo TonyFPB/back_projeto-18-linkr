@@ -1,4 +1,4 @@
-import { insertHashtag, selectHashtag, selectPostById } from "../repositories/posts.repositories.js";
+import { findOnFeed, insertHashtag, selectHashtag, selectPostById } from "../repositories/posts.repositories.js";
 import { postSchema } from "../schemas/posts.schemas.js";
 import getMetaData from "metadata-scraper"
 
@@ -122,16 +122,49 @@ export async function validateDeletePost (req, res, next) {
 }
 
 export async function validateRepost (req, res, next) {
-  const user_id = res.locals
+  const id = res.locals
   const {post_id} = req.params
 
   try {
     const {rows} = await selectPostById(post_id)
     if (rows.length === 0) return res.sendStatus(404)
-    
 
-    req.data = {user_id, post_id}
+    const {rowCount} = await findOnFeed(post_id, id)
+    if (rowCount !== 0) return res.sendStatus(401)
+
+    const {message, user_id} = rows[0]
+    if (user_id === id) return res.status(401).send("Nãom pode respostar seu próprio tweet")
+
+    const hashtags = await arrayHashtags(message)
+    
+    req.data = {user_id: id, post_id, hashtags}
     next()
+    
+  } catch (erro) {
+    console.log(erro)
+    res.sendStatus(500)
+  }
+}
+
+export async function validateUnrepost (req, res, next) {
+  const id = res.locals
+  const {post_id} = req.params
+
+  try {
+    const {rows} = await selectPostById(post_id)
+    if (rows.length === 0) return res.sendStatus(404)
+
+    const postFeed = await findOnFeed(post_id, id)
+    if (postFeed.rowCount === 0) return res.sendStatus(401)
+
+    const {message, user_id} = rows[0]
+    if (user_id === id) return res.status(401).send("Não pode respostar seu próprio tweet")
+
+    const hashtags = await arrayHashtags(message)
+    
+    req.data = {user_id: id, post_id, hashtags, feed_id:postFeed.rows[0].id}
+    next()
+    
   } catch (erro) {
     console.log(erro)
     res.sendStatus(500)

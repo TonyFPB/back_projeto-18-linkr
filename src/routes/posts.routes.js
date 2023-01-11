@@ -5,14 +5,16 @@ import {
   getPosts,
   postNew,
   putPost,
-  getPostsWithTheHashtag
+  getPostsWithTheHashtag,
+  unrepost
 } from "../controllers/post.controllers.js";
 import {
   validateDeletePost,
   validatePost,
   validatePutPost,
   validateRepost,
-  hashtagValidation
+  validateUnrepost,
+  // hashtagValidation
 } from "../middlewares/posts.middlewares.js";
 import { authTokenValidate } from "../middlewares/validateToken.middleware.js";
 
@@ -20,7 +22,6 @@ import { authTokenValidate } from "../middlewares/validateToken.middleware.js";
 const router = express.Router();
 
 router.post("/post", authTokenValidate, validatePost, postNew);
-router.post("/repost/:post_id", authTokenValidate, validateRepost, repost);
 router.get("/post", authTokenValidate, getPosts);
 router.put("/post/:id", authTokenValidate, validatePutPost, putPost);
 router.delete(
@@ -28,7 +29,9 @@ router.delete(
   authTokenValidate,
   validateDeletePost,
   deletePost)
-router.get('/post/:hashtag', authTokenValidate, hashtagValidation, getPostsWithTheHashtag)
+router.post("/repost/:post_id", authTokenValidate, validateRepost, repost);
+router.delete("/repost/:post_id", authTokenValidate, validateUnrepost, unrepost)
+// router.get('/post/:hashtag', authTokenValidate, hashtagValidation, getPostsWithTheHashtag)
 
 
 export default router;
