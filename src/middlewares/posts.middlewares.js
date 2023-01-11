@@ -120,3 +120,22 @@ export async function validateDeletePost (req, res, next) {
     res.sendStatus(500)
   }
 }
+
+export async function validateRepost (req, res, next) {
+  const user_id = res.locals
+  const {post_id} = req.params
+
+  try {
+    const {rows} = await selectPostById(post_id)
+    if (rows.length === 0) return res.sendStatus(404)
+
+    const {message} = rows[0]
+    const hashtags = await arrayHashtags(message)
+
+    req.data = {user_id, post_id, hashtags}
+    next()
+  } catch (erro) {
+    console.log(erro)
+    res.sendStatus(500)
+  }
+}
