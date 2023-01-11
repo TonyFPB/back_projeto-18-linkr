@@ -1,4 +1,4 @@
-import { selectFeed } from "../repositories/feed.respositories.js"
+import { more, selectFeed } from "../repositories/feed.respositories.js"
 
 export async function getFeed (req, res) {
     const user_id = res.locals
@@ -31,6 +31,18 @@ export async function getFeed (req, res) {
 
         res.send(response)
         
+    } catch (erro) {
+        console.log(erro)
+        res.sendStatus(500)
+    }
+}
+export async function moreFeed (req, res) {
+    const {n} = req.params
+    
+    try {
+        const {rows} = more(n*10)
+
+        res.send(rows)
     } catch (erro) {
         console.log(erro)
         res.sendStatus(500)

@@ -33,26 +33,6 @@ export function insertPostHashtag(post_id, hashtag_id) {
   );
 }
 
-export function selectPosts() {
-  return connection.query(`
-        SELECT 
-            p.id,
-            u.id AS user_id,
-            u.image AS user_image,
-            u.name AS user_name,
-            p.url,
-            p.message,
-            m.title,
-            m.description,
-            m.image
-        FROM posts p
-        JOIN users u ON u.id = p.user_id
-        JOIN metadata m ON m."post_id" = p.id
-        ORDER BY p.id DESC
-        LIMIT 20
-    `);
-}
-
 export function selectPostById(id) {
   return connection.query("SELECT * FROM posts WHERE id=$1", [id]);
 }

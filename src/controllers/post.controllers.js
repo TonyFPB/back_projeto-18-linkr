@@ -7,7 +7,6 @@ import {
   insertPostHashtag,
   insertMetadata,
   selectPostByMessage,
-  selectPosts,
   updateUrl,
   deleteMetadata,
   insertPostOnFeed,
@@ -37,37 +36,6 @@ export async function postNew(req, res) {
   } catch (erro) {
     console.log(erro);
     res.sendStatus(500);
-  }
-}
-
-export async function getPosts(req, res) {
-  const user_id = res.locals;
-
-  try {
-    const { rows } = await selectPosts();
-
-    const response = rows.map((post) => {
-      const aux = {
-        id: post.id,
-        post_user_id: post.user_id,
-        owner: post.user_id === user_id,
-        image: post.user_image,
-        name: post.user_name,
-        message: post.message,
-        url: post.url,
-        metadata: {
-          title: post.title,
-          description: post.description,
-          image: post.image,
-        },
-      };
-      return aux;
-    });
-
-    res.send(response);
-  } catch (error) {
-    console.log(error);
-    res.status(500).send("Unavaible url");
   }
 }
 
