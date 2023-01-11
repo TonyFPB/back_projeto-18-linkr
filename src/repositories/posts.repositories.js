@@ -106,18 +106,10 @@ export function getPostsByHashtag(user_id, hashtagId){
     return connection.query(`SELECT posts.id, user_id, (user_id = ($1)) AS owner, users.image, users.name, posts.message, posts.url, (SELECT row_to_json(m) FROM (SELECT metadata.title, metadata.description, metadata.image FROM metadata WHERE post_id = posts.id)m) AS metadata FROM posts JOIN metadata ON post_id = posts.id JOIN users ON user_id = users.id JOIN posts_hashtags ON posts_hashtags.post_id = posts.id WHERE posts_hashtags.hashtag_id = ($2) LIMIT '20'`,[user_id, hashtagId])
 }
 
-export function insertRepostOnFeed(post_id, user_id) {
-  return connection.query(
-    "INSERT INTO feed (post_id, user_id, is_repost) VALUES ($1,$2, true)",
-    [post_id, user_id]
-  );
-}
 export function deletePostOnFeed(post_id) {
   return connection.query("DELETE FROM feed WHERE post_id=$1", [post_id]);
 }
+
 export function findOnFeed (post_id, user_id){
   return connection.query("SELECT * FROM feed WHERE post_id = $1 AND user_id = $2", [post_id, user_id])
-}
-export function deleteFeed (feed_id) {
-  return connection.query('DELETE FROM feed WHERE id = $1', [feed_id])
 }

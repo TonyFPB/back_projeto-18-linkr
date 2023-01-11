@@ -24,6 +24,8 @@ export async function getFeed (req, res) {
                   image: post.image,
                 },
               };
+
+              if (post.feed_user === user_id) aux.repost_name = "you"
             return aux
         })
 
