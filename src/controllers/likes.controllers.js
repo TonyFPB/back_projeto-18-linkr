@@ -1,13 +1,11 @@
 import { deleteLike, getAllPostLikes, getLikesFromUser, insertLikes } from "../repositories/likes.repositories.js";
-//adicionando o like
+
 export async function postLikes(req, res) {
-    const user_id = res.locals.user_id;
-    const post_id = res.locals.post_id;
+    const { user_id, post_id } = req.data;
 
     try {
-        const createdAt = new Date();
 
-        await insertLikes(user_id, post_id, createdAt);
+        await insertLikes(user_id, Number(post_id));
 
         res.sendStatus(201);
 
@@ -17,12 +15,11 @@ export async function postLikes(req, res) {
     }
 }
 export async function removeLikes(req, res) {
-    const user_id = res.locals.user_id;
-    const post_id = res.locals.post_id;
+    const { user_id, post_id } = req.data;
 
     try {
 
-        const like = await getLikesFromUser(user_id, post_id);
+        const like = await getLikesFromUser(user_id, Number(post_id));
 
         if (like.rowCount === 0) {
             return res.sendStatus(404);
@@ -38,10 +35,10 @@ export async function removeLikes(req, res) {
     }
 }
 export async function getAllLikes(req, res) {
-    const user_id = res.locals.user_id;
-    const post_id = res.locals.post_id;
+    const { post_id } = req.data;
+
     try {
-        const likes = await getAllPostLikes(post_id, user_id);
+        const likes = await getAllPostLikes(Number(post_id));
 
         res.send(
             { likes: likes.rows }

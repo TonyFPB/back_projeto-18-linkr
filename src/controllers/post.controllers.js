@@ -13,6 +13,7 @@ import {
   insertPostOnFeed,
   insertRepostOnFeed,
   deletePostOnFeed,
+  getPostsByHashtag,
 } from "../repositories/posts.repositories.js";
 
 export async function postNew(req, res) {
@@ -49,6 +50,7 @@ export async function getPosts(req, res) {
     const response = rows.map((post) => {
       const aux = {
         id: post.id,
+        post_user_id: post.user_id,
         owner: post.user_id === user_id,
         image: post.user_image,
         name: post.user_name,
@@ -120,5 +122,22 @@ export async function repost(req, res) {
   } catch (erro) {
     console.log(erro);
     res.sendStatus(500);
+  }}
+  
+export async function getPostsWithTheHashtag(req,res){
+  const hashtagId = req.hashtagId
+  const user_id = res.locals
+
+  console.log(hashtagId)
+
+  try {
+      const postsWithTheHashtag = await getPostsByHashtag(user_id, hashtagId)
+
+      console.log(postsWithTheHashtag)
+
+      res.status(200).send(postsWithTheHashtag.rows)
+  } catch (error) {
+      console.log(error)
+      res.sendStatus(500)
   }
 }

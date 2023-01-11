@@ -20,16 +20,16 @@ import connection from "../db/db.js";
 export function getPostsLikesUser(id) {
   return connection.query(
     `
-            SELECT u.name, u.image, p.user_id, p.id, p.url, p.message, COUNT(l.id) as likes, m.title, m.image, m.description
+            SELECT u.id as user_id,u.name, u.image as user_image, p.user_id as post_user_id, p.id, p.url, p.message, COUNT(l.id) as likes, m.title, m.image, m.description
 
             FROM users u LEFT JOIN posts p ON u.id = p.user_id
 
                          LEFT JOIN likes l ON  p.id = l.post_id
-                         LEFT JOIN metadata m ON p.id = m.post_id
+                         JOIN metadata m ON p.id = m.post_id
                          
             WHERE u.id = $1
-            GROUP BY  u.name, u.image, p.user_id, p.id, p.url, p.message, m.title, m.image, m.description
-            ORDER BY likes;
+            GROUP BY u.id, u.name, u.image, p.user_id, p.id, p.url, p.message, m.title, m.image, m.description
+            ORDER BY p.id desc;
         `,
     [id]
   );
@@ -56,4 +56,12 @@ export function findUserByName(name) {
     [name + "%"]
   );
   //    ,['%' + name + '%' ])
+}
+
+// export function findUserImageById(id){
+//   return connection.query(`SELECT image FROM users WHERE id=$1`,[id])
+// }
+
+export function findUserImageById(id){
+  return connection.query(`SELECT * FROM users WHERE id=$1`,[id])
 }

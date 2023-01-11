@@ -5,14 +5,17 @@ import {
   getPosts,
   postNew,
   putPost,
+  getPostsWithTheHashtag
 } from "../controllers/post.controllers.js";
 import {
   validateDeletePost,
   validatePost,
   validatePutPost,
   validateRepost,
+  hashtagValidation
 } from "../middlewares/posts.middlewares.js";
 import { authTokenValidate } from "../middlewares/validateToken.middleware.js";
+
 
 const router = express.Router();
 
@@ -24,7 +27,8 @@ router.delete(
   "/post/:post_id",
   authTokenValidate,
   validateDeletePost,
-  deletePost
-);
+  deletePost)
+router.get('/post/:hashtag', authTokenValidate, hashtagValidation, getPostsWithTheHashtag)
+
 
 export default router;
