@@ -128,11 +128,9 @@ export async function validateRepost (req, res, next) {
   try {
     const {rows} = await selectPostById(post_id)
     if (rows.length === 0) return res.sendStatus(404)
+    
 
-    const {message} = rows[0]
-    const hashtags = await arrayHashtags(message)
-
-    req.data = {user_id, post_id, hashtags}
+    req.data = {user_id, post_id}
     next()
   } catch (erro) {
     console.log(erro)
