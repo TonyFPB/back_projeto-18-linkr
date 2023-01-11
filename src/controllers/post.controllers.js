@@ -5,30 +5,34 @@ import {
   deletePostId,
   insertPost,
   insertPostHashtag,
-  insertPostNoMsg,
   insertMetadata,
   selectPostByMessage,
   selectPosts,
   updateUrl,
   deleteMetadata,
+  insertPostOnFeed,
 } from "../repositories/posts.repositories.js";
 
 export async function postNew(req, res) {
   const { user_id, url, message, hashtags, metadata } = req.post;
-  
+  const { title, description, image } = metadata;
+
+  if (!title, !description, !image) return res.send(400)
+
   try {
     await insertPost(user_id, url, message);
     const { rows } = await selectPostByMessage(message);
     const post_id = rows[rows.length - 1].id;
     
-    const { title, description, image } = metadata;
     await insertMetadata(post_id, title, description, image);
+    await insertPostOnFeed(post_id, user_id)
 
     if (hashtags.length === 0) return res.sendStatus(201);
     
     for (let id of hashtags) await insertPostHashtag(post_id, id);
 
     res.sendStatus(201);
+
   } catch (erro) {
     console.log(erro);
     res.sendStatus(500);

@@ -1,5 +1,4 @@
 import connection from "../db/db.js";
-import urlMetadata from 'url-metadata'
 
 export function selectHashtag (body) {
     return connection.query('SELECT * FROM hashtags WHERE name = $1', [body])
@@ -75,3 +74,6 @@ export function insertMetadata (post_id, title, description, image) {
     return connection.query('INSERT INTO metadata (post_id, title, description, image) VALUES ($1,$2,$3,$4)', [post_id, title, description, image])
 }
 
+export function insertPostOnFeed (post_id, user_id) {
+    return connection.query('INSERT INTO feed (post_id, user_id, is_repost) VALUES ($1,$2, false)',[post_id, user_id])
+}
