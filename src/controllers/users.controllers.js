@@ -5,7 +5,7 @@ import {
   findUserImageById,
 } from "../repositories/users.repositories.js";
 
-export async function getUserById(req, res) {
+export async function getUserPostsById(req, res) {
   try {
     const user_id = res.locals;
     const { id } = req.params;
@@ -97,4 +97,14 @@ export async function getUser(req, res) {
 
     res.send(user.rows[0]);
   } catch (err) {}
+}
+
+export async function getUserById(req,res){
+  const user = req.user
+  try {
+    res.send(user)
+  } catch (err) {
+    console.log(err)
+    res.sendStatus(500)
+  }
 }

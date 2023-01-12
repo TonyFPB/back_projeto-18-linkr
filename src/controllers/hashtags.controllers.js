@@ -1,4 +1,3 @@
-import connection from "../db/db.js";
 import { getTrendingsOrder } from "../repositories/hashtags.repositories.js";
 
 export async function getTrendings(req,res){
