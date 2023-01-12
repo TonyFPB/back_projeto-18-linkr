@@ -1,4 +1,3 @@
-import connection from "../db/db.js";
 import { hashtagExistValidate } from "../repositories/hashtags.repositories.js";
 
 export async function hashtagValidation(req,res,next){
