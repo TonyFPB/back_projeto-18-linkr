@@ -5,6 +5,7 @@ import {
   putPost,
   getPostsWithTheHashtag,
 } from "../controllers/post.controllers.js";
+import { hashtagValidation } from "../middlewares/hashtag.middlewares.js";
 import {
   validateDeletePost,
   validatePost,
