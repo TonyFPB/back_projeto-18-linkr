@@ -6,7 +6,7 @@ import { authTokenValidate } from "../middlewares/validateToken.middleware.js";
 const router = express.Router()
 
 router.get('/feed', authTokenValidate, getFeed)
-router.get("/new", authTokenValidate, getNew)
+router.post("/new", authTokenValidate, getNew)
 router.get("/more/:n", authTokenValidate, moreFeed)
 
 export default router
