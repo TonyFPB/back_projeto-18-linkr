@@ -3,6 +3,10 @@ import { findUserImageById } from "../repositories/users.repositories.js"
 export async function userValidation(req,res,next){
     const {id} = req.params
 
+    if(isNaN(parseInt(id))){
+        return res.sendStatus(400)
+    }
+
     const userValidate = await findUserImageById(id)
 
     if (userValidate.rows.length===0){

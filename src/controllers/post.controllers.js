@@ -12,6 +12,7 @@ import {
   updateUrl,
   deleteMetadata,
   getPostsByHashtag,
+  selectPostsFromFollows,
 } from "../repositories/posts.repositories.js";
 
 export async function postNew(req, res) {
@@ -112,11 +113,20 @@ export async function getPostsWithTheHashtag(req,res){
   try {
       const postsWithTheHashtag = await getPostsByHashtag(user_id, hashtagId)
 
-      console.log(postsWithTheHashtag)
-
       res.status(200).send(postsWithTheHashtag.rows)
   } catch (error) {
       console.log(error)
       res.sendStatus(500)
+  }
+}
+
+export async function getPostsFromFollows(req,res){
+  const user_id = res.locals
+  try {
+    const postsFromFollowers = await selectPostsFromFollows(user_id)
+    res.status(200).send(postsFromFollowers.rows)
+  } catch (err) {
+    console.log(err)
+    res.sendStatus(500)
   }
 }
