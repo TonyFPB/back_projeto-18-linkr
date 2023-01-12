@@ -1,4 +1,4 @@
-import { more, selectFeed } from "../repositories/feed.respositories.js"
+import { more, newFeed, now, selectFeed } from "../repositories/feed.respositories.js"
 
 export async function getFeed (req, res) {
     const user_id = res.locals
@@ -29,7 +29,9 @@ export async function getFeed (req, res) {
             return aux
         })
 
-        res.send(response)
+        const agora = await now()
+        const {last_update} = agora.rows[0]
+        res.send({last_update, posts:response})
         
     } catch (erro) {
         console.log(erro)
@@ -43,6 +45,20 @@ export async function moreFeed (req, res) {
         const {rows} = more(n*10)
 
         res.send(rows)
+    } catch (erro) {
+        console.log(erro)
+        res.sendStatus(500)
+    }
+}
+export async function getNew (req, res) {
+    const {last_update} = req.body
+
+    if (!last_update) return res.sendStatus(400)
+
+    try {
+        const {rowCount} = await newFeed(last_update)
+
+        res.send({num: rowCount})
     } catch (erro) {
         console.log(erro)
         res.sendStatus(500)

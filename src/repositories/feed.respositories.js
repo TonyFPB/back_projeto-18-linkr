@@ -1,6 +1,6 @@
 import connection from "../db/db.js";
 
-export function selectFeed () {
+export function selectFeed() {
   return connection.query(`
           SELECT 
               f.id,
@@ -25,8 +25,9 @@ export function selectFeed () {
       `);
 }
 
-export function more (offset) {
-    return connection.query(`
+export function more(offset) {
+  return connection.query(
+    `
             SELECT 
                 f.id,
                 f.is_repost,
@@ -49,5 +50,16 @@ export function more (offset) {
             ORDER BY p.id DESC
             OFFSET $1 ROWS
             FETCH NEXT 10 ROWS ONLY
-        `,[offset]);
-  }
+        `,
+    [offset]
+  );
+}
+
+export function newFeed(time) {
+  return connection.query('SELECT * FROM feed WHERE "createdAt" > $1', [time]);
+}
+
+export function now () {
+  return connection.query('SELECT NOW() AS last_update')
+}
+

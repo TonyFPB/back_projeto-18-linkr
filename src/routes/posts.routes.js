@@ -23,7 +23,7 @@ router.delete(
   authTokenValidate,
   validateDeletePost,
   deletePost)
-router.get('/post/:hashtag', authTokenValidate, hashtagValidation, getPostsWithTheHashtag)
+// router.get('/post/:hashtag', authTokenValidate, hashtagValidation, getPostsWithTheHashtag)
 
 
 export default router;
