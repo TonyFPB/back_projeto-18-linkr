@@ -88,12 +88,19 @@ export async function validateUnrepost(req, res, next) {
 
 export async function validateGetRepost(req, res, next) {
   const { post_id } = req.params;
+  const id = res.locals
 
   try {
-    const { rowCount } = await selectPostById(post_id);
-    if (rowCount === 0) return res.sendStatus(404);
+    const { rows } = await selectPostById(post_id);
+    if (rows.length === 0) return res.sendStatus(404);
 
-    req.data = { post_id };
+    const { user_id } = rows[0];
+    const allowed = user_id !== id
+
+    const { rowCount } = await findOnFeed(post_id, id);
+    const avaible = rowCount === 0 
+
+    req.data = { post_id, allowed, avaible };
     next();
   } catch (erro) {
     console.log(erro);
