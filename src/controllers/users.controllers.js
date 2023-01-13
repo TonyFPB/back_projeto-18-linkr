@@ -3,6 +3,7 @@ import {
   getTrending,
   findUserByName,
   findUserImageById,
+  findUserByNameFollowsFirst,
 } from "../repositories/users.repositories.js";
 
 export async function getUserPostsById(req, res) {
@@ -80,8 +81,10 @@ export async function getUserPostsById(req, res) {
 export async function getUserByName(req, res) {
   try {
     const { name } = req.params;
+    const idFollower = res.locals
 
-    const user = await findUserByName(name);
+    //const user = await findUserByName(name);
+    const user = await findUserByNameFollowsFirst(name, idFollower)
 
     return res.status(200).send(user.rows);
   } catch (error) {

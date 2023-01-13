@@ -1,4 +1,4 @@
-import { deleteFollow, insertFollow, selectPostsByFollows } from "../repositories/follows.repositories.js"
+import { deleteFollow, insertFollow } from "../repositories/follows.repositories.js"
 
 export async function follow(req,res){
     const user = req.user
@@ -24,12 +24,10 @@ export async function unfollow(req,res){
     }
 }
 
-export async function getPostsByFollows(req,res){
-    const idFollower = res.locals
-
+export async function getFollows(req,res){
+    const {isFollow} = req
     try {
-        const posts = await selectPostsByFollows(idFollower)
-        res.status(200).send(posts.rows)
+        res.send(isFollow)
     } catch (err) {
         console.log(err)
         res.sendStatus(500)

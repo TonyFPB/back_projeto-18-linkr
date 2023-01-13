@@ -25,3 +25,18 @@ export async function unfollowValidate(req,res,next){
     
     next()
 }
+
+export async function checkFollowOrUnfollow(req,res,next){
+    const user = req.user
+    const idFollower = res.locals
+
+    const follow = await selectFollow(idFollower, user.id)
+
+    if (follow.rows.length === 0){
+        req.isFollow = false
+    } else {
+        req.isFollow = true
+    }
+
+    next()
+}

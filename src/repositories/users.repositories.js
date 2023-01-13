@@ -58,6 +58,18 @@ export function findUserByName(name) {
   //    ,['%' + name + '%' ])
 }
 
+export function findUserByNameFollowsFirst(name, idFollower){
+  return connection.query(`
+  with follows as (SELECT users.id, users.name, users.image, 'follows' as origin
+  FROM users
+  join follows on users.id=follows.account
+  WHERE name ILIKE $1 and follows.user=($2)), anyone as (SELECT id, name, image, 'anyone' as origin
+  FROM users
+  WHERE name ILIKE $1 and id not in (select id from follows))
+  SELECT * from follows union all SELECT * from anyone order by origin desc
+  `, [`${name}%`, idFollower])
+}
+
 // export function findUserImageById(id){
 //   return connection.query(`SELECT image FROM users WHERE id=$1`,[id])
 // }
