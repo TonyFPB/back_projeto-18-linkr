@@ -83,8 +83,8 @@ export function insertPostOnFeed(post_id, user_id) {
 }
 
 export function getPostsByHashtag(user_id, hashtagId){
-  console.log(user_id, hashtagId)
-    return connection.query(`  SELECT
+    return connection.query(`
+    SELECT distinct
     f.id,
     f.is_repost,
     f.user_id AS feed_user,
@@ -96,7 +96,7 @@ export function getPostsByHashtag(user_id, hashtagId){
     u.name AS name,
     p.url,
     p.message,
-    (SELECT row_to_json(m) FROM (SELECT metadata.title, metadata.description, metadata.image FROM metadata WHERE post_id = p.id)m) AS metadata
+    m.title, m.description, m.image as link_image
 FROM feed f 
 JOIN posts p ON f.post_id = p.id
 JOIN users u ON u.id = p.user_id 
@@ -106,7 +106,8 @@ JOIN posts_hashtags ph ON ph.post_id = p.id
 JOIN hashtags h ON h.id = ph.hashtag_id
 WHERE ph.hashtag_id = $2 and f.is_repost = false
 ORDER BY p.id DESC
-LIMIT 20`,[user_id, hashtagId])
+LIMIT 20
+`,[user_id, hashtagId])
 }
 
 
