@@ -10,6 +10,7 @@ import hashtagsRoutes from "./routes/hashtags.routes.js"
 import commentsRoutes from "./routes/comments.routes.js";
 import feedRouter from "./routes/feed.routes.js"
 import repostRouter from "./routes/reposts.routes.js"
+import followRoutes from "./routes/follows.routes.js"
 
 dotenv.config();
 
@@ -25,6 +26,7 @@ app.use(hashtagsRoutes)
 app.use(commentsRoutes)
 app.use(feedRouter)
 app.use(repostRouter)
+app.use(followRoutes)
 
 const PORT = process.env.PORT || 5000
 

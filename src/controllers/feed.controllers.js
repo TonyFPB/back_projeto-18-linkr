@@ -4,7 +4,7 @@ export async function getFeed (req, res) {
     const user_id = res.locals
 
     try {
-        const {rows} = await selectFeed()
+        const {rows} = await selectFeed(user_id)
         
         const response = rows.map(post => {
             const aux = {
@@ -12,8 +12,9 @@ export async function getFeed (req, res) {
                 repost: post.is_repost,
                 repost_name: post.repost_name,
                 post_id: post.post_id,
-                post_user: post.user_id,
-                owner: post.user_id === user_id,
+                feed_user:post.feed_user,
+                post_user: post.post_user,
+                owner: post.owner,
                 image: post.user_image,
                 name: post.user_name,
                 message: post.message,
