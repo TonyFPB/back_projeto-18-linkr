@@ -11,6 +11,7 @@ export async function findWithComments(user_id, post_id) {
         JSON_BUILD_OBJECT(
             'id',c.id,
             'ownerComment',u2.name,
+            'ownerImage',u2.image,
             'text',c.comment,
             'isOwner', (u1.id=u2.id),
             'isFollowing',COALESCE((SELECT 
@@ -46,4 +47,10 @@ WHERE
     p.id=$2
 GROUP BY
     p.id, u1.name`, [user_id, post_id])
+}
+
+export async function findAmountComments(post_id){
+    return connection.query(`
+        SELECT COUNT(post_id) AS ammount FROM comments WHERE post_id=$1
+    `,[post_id])
 }
