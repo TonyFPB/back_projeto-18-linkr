@@ -6,7 +6,7 @@ export async function moreFeed (req, res) {
     const a = n*10
 
     try {
-        const {rows} = await more(a)
+        const {rows} = await more(a, user_id)
 
         const response = rows.map(post => {
             const aux = {

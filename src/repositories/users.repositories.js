@@ -38,9 +38,8 @@ FROM feed f
 JOIN posts p ON f.post_id = p.id
 LEFT JOIN likes l ON  p.id = l.post_id
 JOIN users u ON u.id = p.user_id 
-JOIN users w ON w.id = f.user_id
-JOIN metadata m ON m."post_id" = p.id
-WHERE u.id = $1 and f.is_repost = false
+JOIN users w ON w.id = f.2
+JOIN metadata m 
 GROUP BY f.id,u.id, u.name, w.name, u.image, f.user_id, p.id, p.url, p.message, m.title, m.image, m.description
 ORDER BY p.id DESC
 LIMIT 20
