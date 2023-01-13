@@ -35,12 +35,13 @@ export async function unrepost(req, res) {
 }
 
 export async function getReposts(req, res) {
-  const { post_id } = req.data;
+  const { post_id, allowed, avaible } = req.data;
 
   try {
+
     const  {rowCount} = await selectReposts(post_id)
 
-    res.send({rowCount})
+    res.send({rowCount, allowed, avaible })
   } catch (erro) {
     console.log(erro)
     res.sendStatus(500)
