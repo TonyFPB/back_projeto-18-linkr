@@ -1,4 +1,3 @@
-import connection from "../db/db.js"
 import bcrypt from 'bcrypt'
 import { findUser } from "../repositories/auth.repositories.js"
 

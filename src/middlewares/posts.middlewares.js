@@ -1,4 +1,4 @@
-import { insertHashtag, selectHashtag, selectPostById } from "../repositories/posts.repositories.js";
+import { findOnFeed, insertHashtag, selectHashtag, selectPostById } from "../repositories/posts.repositories.js";
 import { postSchema } from "../schemas/posts.schemas.js";
 import getMetaData from "metadata-scraper"
 
@@ -120,3 +120,4 @@ export async function validateDeletePost (req, res, next) {
     res.sendStatus(500)
   }
 }
+
