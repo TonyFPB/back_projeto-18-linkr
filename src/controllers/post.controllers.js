@@ -81,10 +81,18 @@ export async function getPostsWithTheHashtag(req,res){
   const hashtagId = req.hashtagId
   const user_id = res.locals
 
-  console.log(hashtagId)
-
   try {
       const postsWithTheHashtag = await getPostsByHashtag(user_id, hashtagId)
+      const posts = postsWithTheHashtag.rows.map(post=> {
+        post.metadata = {
+          title: post.title,
+          image: post.link_image,
+          description: post.description
+        }
+        delete post.description, post.title, post.link_image
+        
+      })
+      console.log(posts)
 
       res.status(200).send(postsWithTheHashtag.rows)
   } catch (error) {

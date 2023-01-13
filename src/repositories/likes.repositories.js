@@ -15,7 +15,6 @@ export function getLikesFromUser(post_id, user_id) {
 }
 
 export function getAllPostLikes(post_id) {
-    console.log("aqui", post_id)
     return connection.query(`
     SELECT likes.user_id, users.id, users.name 
     FROM likes 

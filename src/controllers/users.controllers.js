@@ -13,8 +13,6 @@ export async function getUserPostsById(req, res) {
 
     const postsUser = await getPostsLikesUser(id);
 
-    console.log(postsUser.rows)
-
     const trending = await getTrending();
 
     // const result = {
