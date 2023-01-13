@@ -20,16 +20,30 @@ import connection from "../db/db.js";
 export function getPostsLikesUser(id) {
   return connection.query(
     `
-            SELECT u.id as user_id,u.name, u.image as user_image, p.user_id as post_user_id, p.id, p.url, p.message, COUNT(l.id) as likes, m.title, m.image, m.description
-
-            FROM users u LEFT JOIN posts p ON u.id = p.user_id
-
-                         LEFT JOIN likes l ON  p.id = l.post_id
-                         JOIN metadata m ON p.id = m.post_id
-                         
-            WHERE u.id = $1
-            GROUP BY u.id, u.name, u.image, p.user_id, p.id, p.url, p.message, m.title, m.image, m.description
-            ORDER BY p.id desc;
+    SELECT
+    f.id,
+    f.is_repost,
+    f.user_id AS feed_user,
+    W.name AS repost_name, 
+    p.id AS post_id,
+    u.id AS post_user,
+    (u.id=$1) AS owner,
+    u.image AS image,
+    u.name AS name,
+    p.url,
+    p.message,
+    (SELECT row_to_json(m) FROM (SELECT metadata.title, metadata.description, metadata.image FROM metadata WHERE post_id = p.id)m) AS metadata,
+    COUNT(l.id) as likes
+FROM feed f 
+JOIN posts p ON f.post_id = p.id
+LEFT JOIN likes l ON  p.id = l.post_id
+JOIN users u ON u.id = p.user_id 
+JOIN users w ON w.id = f.user_id
+JOIN metadata m ON m."post_id" = p.id
+WHERE u.id = $1 and f.is_repost = false
+GROUP BY f.id,u.id, u.name, w.name, u.image, f.user_id, p.id, p.url, p.message, m.title, m.image, m.description
+ORDER BY p.id DESC
+LIMIT 20
         `,
     [id]
   );

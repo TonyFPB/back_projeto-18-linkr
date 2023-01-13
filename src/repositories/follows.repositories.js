@@ -11,3 +11,7 @@ export function selectFollow(idFollower, user){
 export function deleteFollow(followId){
     return connection.query(`DELETE FROM follows WHERE id=($1)`,[followId])
 }
+
+export function selectAllFollowsByUser(idFollower){
+    return connection.query(`SELECT * FROM follows WHERE "user" = $1`,[idFollower])
+}
