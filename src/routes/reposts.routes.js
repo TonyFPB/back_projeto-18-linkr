@@ -13,8 +13,10 @@ import {
 } from "../controllers/reposts.controllers.js";
 
 const router = express.Router();
-
-router.post("/repost/:post_id", authTokenValidate, validateRepost, repost);
+console.log("rote")
+router.post("/repost/:post_id", authTokenValidate, (req, res, next) => {
+  console.log("validated"); next()
+},validateRepost, repost);
 router.delete(
   "/repost/:post_id",
   authTokenValidate,

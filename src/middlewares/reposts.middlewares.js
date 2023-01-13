@@ -40,6 +40,7 @@ export async function validateRepost(req, res, next) {
   const id = res.locals;
   const { post_id } = req.params;
 
+  console.log("inicio do middleware")
   try {
     const { rows } = await selectPostById(post_id);
     if (rows.length === 0) return res.sendStatus(404);
@@ -52,7 +53,7 @@ export async function validateRepost(req, res, next) {
       return res.status(401).send("Não pode respostar seu próprio tweet");
 
     const hashtags = await arrayHashtags(message);
-
+    console.log("fim do middleware")
     req.data = { user_id: id, post_id, hashtags };
     next();
   } catch (erro) {
